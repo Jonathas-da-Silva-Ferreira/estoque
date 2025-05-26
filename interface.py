@@ -35,4 +35,18 @@ class EstoqueApp:
         self.adicionar_btn = tk.Button(self.master, text="Adicionar", command=self.adicionar_produto)
         self.adicionar_btn.pack(pady=5)
 
+        self.atualizar_btn = tk.Button(self.master, text="Atualizar", command=self.atualizar_produto)
+        self.atualizar_btn.pack(pady=5)
+
+        self.deletar_btn = tk.Button(self.master, text="Deletar", command=self.deletar_produto)
+        self.deletar_btn.pack(pady=5)
+
+        self.buscar_btn = tk.Button(self.master, text="Buscar", command=self.buscar_produto)
+        self.buscar_btn.pack(pady=5)
+
+        # Tabela para exibir o estoque
+        self.lista = tk.Listbox(self.master, width=70)
+        self.lista.pack(pady=10)
+
+    def exibir_estoque(self, produtos=None):
         
