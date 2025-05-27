@@ -49,4 +49,11 @@ class EstoqueApp:
         self.lista.pack(pady=10)
 
     def exibir_estoque(self, produtos=None):
-        
+        self.lista.delete(0, tk.END)
+        produtos = produtos if produtos is not None else self.estoque
+        for produto in produtos:
+            texto = f"{produto['nome'].title()} - Quantidade: {produto['quantidade']} - Preço: R$ {produto['preco']:.2f}"
+            self.lista.insert(tk.END, texto)
+
+    def adicionar_produto(self):
+        nome = self.nome_entry.get().strip()
