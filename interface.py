@@ -23,8 +23,8 @@ class EstoqueApp:
 
         self.quantidade_label = tk.Label(self.master, text="Qauntidade:")
         self.quantidade_label.pack()
-        self.quantiddade_entry = tk.Entry(self.master)
-        self.quantiddade_entry= tk.Entry(self.master)
+        self.quantidade_entry = tk.Entry(self.master)
+        self.quantidade_entry= tk.Entry(self.master)
 
         self.preco_label = tk.Label(self.master, text="Preço (R$): ")
         self.preco_label.pack()
@@ -56,4 +56,45 @@ class EstoqueApp:
             self.lista.insert(tk.END, texto)
 
     def adicionar_produto(self):
-        nome = self.nome_entry.get().strip()
+        nome = self.nome_entry.get().lower()
+        try:
+            quantidade = int(self.quantidade_entry.get())
+            preco = float(self.preco_entry.get())
+        except ValueError:
+            messagebox.showerror("Erro", "Quantidade e preço devem ser números válidos.")
+            return
+        
+        for produto in self.estoque:
+            if produto["nome"] == nome:
+                messagebox.showerror("Erro", "Produto já existe no estoque.")
+                return
+        
+        if quantidade <= 0 or preco <= 0:
+            messagebox.showerror("Erro", "Quantidade de preço devem ser maiores que zero.")
+            return
+        
+        novo = {
+            "nome": nome,
+            "quantidade": quantidade,
+            "preço": preco
+        }
+        self.estoque.append(novo)
+        salvar_estoque(self.estoque)
+        self.exibir_estoque()
+        messagebox.showinfo("Sucesso", "Produto adicionado com sucesso!")
+
+    def atualizar_produto(self):
+        nome = self.nome_entry.get().lower()
+        for produto in self.estoque:
+            if produto["nome"] == nome:
+                try:
+                    quantidade = int(self.quantidade_entry.get())
+                    preco = float(self.preco_entry.get())
+                except ValueError:
+                    messagebox.showerror("Erro", "Quantidade e preço devem ser números válidos.")
+                    return
+                if quantidade <= 0 or preco <= 0:
+                    messagebox.showerror("Erro", "Valores inválidos.")
+                    return
+                produto["quantidade"] = quantidade
+                produto["preço"] = preco
