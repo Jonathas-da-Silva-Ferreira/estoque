@@ -52,7 +52,7 @@ class EstoqueApp:
         self.lista.delete(0, tk.END)
         produtos = produtos if produtos is not None else self.estoque
         for produto in produtos:
-            texto = f"{produto['nome'].title()} - Quantidade: {produto['quantidade']} - Preço: R$ {produto['preco']:.2f}"
+            texto = f"{produto['nome'].title()} - Quantidade: {produto['quantidade']} - Preço: R$ {produto['preço']:.2f}"
             self.lista.insert(tk.END, texto)
 
     def adicionar_produto(self):
@@ -98,3 +98,33 @@ class EstoqueApp:
                     return
                 produto["quantidade"] = quantidade
                 produto["preço"] = preco
+                salvar_estoque(self.estoque)
+                self.exibir_estoque()
+                messagebox.showinfo("Sucesso", "Produto atualizado com sucesso!")
+                return
+            
+        messagebox.showerror("Erro", "Produtod não encotrado no estoque.")
+
+    def deletar_produto(self):
+        nome = self.nome_entry.get().lower()
+        for produto in self.estoque:
+            if produto["nome"] == nome:
+                self.estoque.remove(produto)
+                salvar_estoque(self.estoque)
+                self.exibir_estoque()
+                messagebox.showinfo("Sucesso", "Produto deletado com sucesso!")
+                return
+        messagebox.showerror("Erro", "Produto não encontrado no estoque.")
+    
+    def buscar_produto(self):
+        termo = self.nome_entry.get().lower()
+        resultados = [p for p in self.estoque if termo in p["nome"]]
+        if resultados:
+            self.exibir_estoque(resultados)
+        else:
+            messagebox.showinfo("Busca", "Nenhum produto encontrado com esse termo.")
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = EstoqueApp(root)
+    root.mainloop()
