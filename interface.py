@@ -55,8 +55,14 @@ class EstoqueApp:
             texto = f"{produto['nome'].title()} - Quantidade: {produto['quantidade']} - Preço: R$ {produto['preço']:.2f}"
             self.lista.insert(tk.END, texto)
 
+            self.limpar_campos()
+
     def adicionar_produto(self):
         nome = self.nome_entry.get().lower()
+        
+        if not nome or not self.quantidade_entry.get() or not self.preco_entry.get():
+            messagebox.showerror("Erro", "Todos os campos devem ser preenchidos.")
+            return
         try:
             quantidade = int(self.quantidade_entry.get())
             preco = float(self.preco_entry.get())
@@ -83,10 +89,17 @@ class EstoqueApp:
         self.exibir_estoque()
         messagebox.showinfo("Sucesso", "Produto adicionado com sucesso!")
 
+        self.limpar_campos()
+
     def atualizar_produto(self):
         nome = self.nome_entry.get().lower()
         for produto in self.estoque:
             if produto["nome"] == nome:
+
+            
+                if not nome or not self.quantidade_entry.get() or not self.preco_entry.get():
+                    messagebox.showerror("Erro", "Todos os campos devem ser preenchidos.")
+                    return
                 try:
                     quantidade = int(self.quantidade_entry.get())
                     preco = float(self.preco_entry.get())
@@ -103,6 +116,8 @@ class EstoqueApp:
                 messagebox.showinfo("Sucesso", "Produto atualizado com sucesso!")
                 return
             
+            self.limpar_campos()
+            
         messagebox.showerror("Erro", "Produto não encotrado no estoque.")
 
     def deletar_produto(self):
@@ -115,6 +130,8 @@ class EstoqueApp:
                 messagebox.showinfo("Sucesso", "Produto deletado com sucesso!")
                 return
         messagebox.showerror("Erro", "Produto não encontrado no estoque.")
+
+        self.limpar_campos()
     
     def buscar_produto(self):
         termo = self.nome_entry.get().lower()
@@ -123,6 +140,8 @@ class EstoqueApp:
             self.exibir_estoque(resultados)
         else:
             messagebox.showinfo("Busca", "Nenhum produto encontrado com esse termo.")
+
+        self.limpar_campos()
 
     def limpar_campos(self):
         self.nome_entry.delete(0, tk.END)
