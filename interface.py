@@ -21,10 +21,10 @@ class EstoqueApp:
         self.nome_entry = tk.Entry(self.master)
         self.nome_entry.pack()
 
-        self.quantidade_label = tk.Label(self.master, text="Qauntidade:")
+        self.quantidade_label = tk.Label(self.master, text="Quantidade:")
         self.quantidade_label.pack()
         self.quantidade_entry = tk.Entry(self.master)
-        self.quantidade_entry= tk.Entry(self.master)
+        self.quantidade_entry.pack()
 
         self.preco_label = tk.Label(self.master, text="Preço (R$): ")
         self.preco_label.pack()
@@ -103,7 +103,7 @@ class EstoqueApp:
                 messagebox.showinfo("Sucesso", "Produto atualizado com sucesso!")
                 return
             
-        messagebox.showerror("Erro", "Produtod não encotrado no estoque.")
+        messagebox.showerror("Erro", "Produto não encotrado no estoque.")
 
     def deletar_produto(self):
         nome = self.nome_entry.get().lower()
@@ -123,6 +123,12 @@ class EstoqueApp:
             self.exibir_estoque(resultados)
         else:
             messagebox.showinfo("Busca", "Nenhum produto encontrado com esse termo.")
+
+    def limpar_campos(self):
+        self.nome_entry.delete(0, tk.END)
+        self.quantidade_entry.delete(0, tk.END)
+        self.preco_entry.delete(0, tk.END)
+
 
 if __name__ == "__main__":
     root = tk.Tk()
