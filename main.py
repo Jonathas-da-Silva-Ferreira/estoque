@@ -11,9 +11,9 @@ produtos = [
     ("Arroz", 10, 5.99),
     ("Feijão", 20, 4.49),
     ("Macarrão", 15, 2.99)
-    ]
+]
 
-cursor.execute("INSERT INTO produtos (nome, quantidade, preco) VALUES (?, ?, ?)", produtos)
+cursor.executemany("INSERT INTO produtos (nome, quantidade, preco) VALUES (?, ?, ?)", produtos)
 
 conn.commit()
 
@@ -23,6 +23,6 @@ cursor.execute("SELECT * FROM produtos")
 todos = cursor.fetchall()
 
 for produto in todos:
-    print(f"ID: {produtos[0]}, Nome: {produto[1]}, Quantidade: {produto[2]}, Preço: R$ {produto[3]:.2f}")
+    print(f"ID: {produto[0]}, Nome: {produto[1]}, Quantidade: {produto[2]}, Preço: R$ {produto[3]:.2f}")
 
 conn.close()
