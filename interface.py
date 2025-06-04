@@ -1,6 +1,5 @@
 import tkinter as tk
 from tkinter import messagebox
-from tkinter import ttk
 from estoque import carregar_estoque, salvar_estoque
 
 class EstoqueApp:
@@ -15,8 +14,8 @@ class EstoqueApp:
         self.exibir_estoque()
 
     def criar_widgets(self):
-        # Frame para entrada de dados
-        self.nome_label = tk.Label (self.master, text="Nome do produto:")
+        # Labels e entradas
+        self.nome_label = tk.Label(self.master, text="Nome do produto:")
         self.nome_label.pack()
         self.nome_entry = tk.Entry(self.master)
         self.nome_entry.pack()
@@ -26,12 +25,12 @@ class EstoqueApp:
         self.quantidade_entry = tk.Entry(self.master)
         self.quantidade_entry.pack()
 
-        self.preco_label = tk.Label(self.master, text="Preço (R$): ")
+        self.preco_label = tk.Label(self.master, text="Preço (R$):")
         self.preco_label.pack()
         self.preco_entry = tk.Entry(self.master)
         self.preco_entry.pack()
 
-        #Botões
+        # Botões
         self.adicionar_btn = tk.Button(self.master, text="Adicionar", command=self.adicionar_produto)
         self.adicionar_btn.pack(pady=5)
 
@@ -44,7 +43,7 @@ class EstoqueApp:
         self.buscar_btn = tk.Button(self.master, text="Buscar", command=self.buscar_produto)
         self.buscar_btn.pack(pady=5)
 
-        # Tabela para exibir o estoque
+        # Lista de produtos
         self.lista = tk.Listbox(self.master, width=70)
         self.lista.pack(pady=10)
 
@@ -55,86 +54,88 @@ class EstoqueApp:
             texto = f"{produto['nome'].title()} - Quantidade: {produto['quantidade']} - Preço: R$ {produto['preço']:.2f}"
             self.lista.insert(tk.END, texto)
 
-            self.limpar_campos()
-
     def adicionar_produto(self):
-        nome = self.nome_entry.get().lower()
-        
+        nome = self.nome_entry.get().strip().lower()
+
         if not nome or not self.quantidade_entry.get() or not self.preco_entry.get():
             messagebox.showerror("Erro", "Todos os campos devem ser preenchidos.")
             return
+
         try:
             quantidade = int(self.quantidade_entry.get())
             preco = float(self.preco_entry.get())
         except ValueError:
             messagebox.showerror("Erro", "Quantidade e preço devem ser números válidos.")
             return
-        
+
+        if quantidade <= 0 or preco <= 0:
+            messagebox.showerror("Erro", "Quantidade e preço devem ser maiores que zero.")
+            return
+
         for produto in self.estoque:
             if produto["nome"] == nome:
                 messagebox.showerror("Erro", "Produto já existe no estoque.")
                 return
-        
-        if quantidade <= 0 or preco <= 0:
-            messagebox.showerror("Erro", "Quantidade de preço devem ser maiores que zero.")
-            return
-        
+
         novo = {
             "nome": nome,
             "quantidade": quantidade,
             "preço": preco
         }
+
         self.estoque.append(novo)
         salvar_estoque(self.estoque)
         self.exibir_estoque()
+        self.limpar_campos()
         messagebox.showinfo("Sucesso", "Produto adicionado com sucesso!")
 
-        self.limpar_campos()
-
     def atualizar_produto(self):
-        nome = self.nome_entry.get().lower()
+        nome = self.nome_entry.get().strip().lower()
+
+        if not nome or not self.quantidade_entry.get() or not self.preco_entry.get():
+            messagebox.showerror("Erro", "Todos os campos devem ser preenchidos.")
+            return
+
         for produto in self.estoque:
             if produto["nome"] == nome:
-
-            
-                if not nome or not self.quantidade_entry.get() or not self.preco_entry.get():
-                    messagebox.showerror("Erro", "Todos os campos devem ser preenchidos.")
-                    return
                 try:
                     quantidade = int(self.quantidade_entry.get())
                     preco = float(self.preco_entry.get())
                 except ValueError:
                     messagebox.showerror("Erro", "Quantidade e preço devem ser números válidos.")
                     return
+
                 if quantidade <= 0 or preco <= 0:
                     messagebox.showerror("Erro", "Valores inválidos.")
                     return
+
                 produto["quantidade"] = quantidade
                 produto["preço"] = preco
                 salvar_estoque(self.estoque)
                 self.exibir_estoque()
+                self.limpar_campos()
                 messagebox.showinfo("Sucesso", "Produto atualizado com sucesso!")
                 return
-            
-            self.limpar_campos()
-            
-        messagebox.showerror("Erro", "Produto não encotrado no estoque.")
+
+        messagebox.showerror("Erro", "Produto não encontrado no estoque.")
 
     def deletar_produto(self):
-        nome = self.nome_entry.get().lower()
+        nome = self.nome_entry.get().strip().lower()
+
         for produto in self.estoque:
             if produto["nome"] == nome:
                 self.estoque.remove(produto)
                 salvar_estoque(self.estoque)
                 self.exibir_estoque()
+                self.limpar_campos()
                 messagebox.showinfo("Sucesso", "Produto deletado com sucesso!")
                 return
+
         messagebox.showerror("Erro", "Produto não encontrado no estoque.")
 
-        self.limpar_campos()
-    
     def buscar_produto(self):
-        termo = self.nome_entry.get().lower()
+        termo = self.nome_entry.get().strip().lower()
+
         resultados = [p for p in self.estoque if termo in p["nome"]]
         if resultados:
             self.exibir_estoque(resultados)
@@ -147,7 +148,6 @@ class EstoqueApp:
         self.nome_entry.delete(0, tk.END)
         self.quantidade_entry.delete(0, tk.END)
         self.preco_entry.delete(0, tk.END)
-
 
 if __name__ == "__main__":
     root = tk.Tk()
