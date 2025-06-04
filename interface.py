@@ -60,7 +60,7 @@ class EstoqueApp:
         if not nome or not self.quantidade_entry.get() or not self.preco_entry.get():
             messagebox.showerror("Erro", "Todos os campos devem ser preenchidos.")
             return
-
+#teste 
         try:
             quantidade = int(self.quantidade_entry.get())
             preco = float(self.preco_entry.get())
