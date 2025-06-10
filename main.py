@@ -1,28 +1,22 @@
-from banco import criar_tabela, conectar
+from banco import conectar 
 
-#criar_tabela()
-criar_tabela()
-
-#Adcionar produtos
 conn = conectar()
 cursor = conn.cursor()
 
-produtos = [
-    ("Arroz", 10, 5.99),
-    ("Feijão", 20, 4.49),
-    ("Macarrão", 15, 2.99)
-]
+nome = input("Digite o nome do que deseja pesquisar: ").strip()
 
-cursor.executemany("INSERT INTO produtos (nome, quantidade, preco) VALUES (?, ?, ?)", produtos)
+cursor.execute("SELECT * FROM produtos WHERE nome = ?", (nome,))
+produto = cursor.fetchone()
 
-conn.commit()
+if produto:
+    nova_quantidade = int(input("Digite a nova quantidade:"))
+    novo_preco = float(input("Novo preço: "))
 
+    cursor.execute("UPDATE clientes SET quantidade = ? WHERE nome = ?", (nova_quantidade, novo_preco, nome))
+    conn.commit()
 
-#Exibir produtos
-cursor.execute("SELECT * FROM produtos")
-todos = cursor.fetchall()
-
-for produto in todos:
-    print(f"ID: {produto[0]}, Nome: {produto[1]}, Quantidade: {produto[2]}, Preço: R$ {produto[3]:.2f}")
+    print("Produto atualizado com sucesso!")
+else:
+    print("Produto não encontrado.")
 
 conn.close()
