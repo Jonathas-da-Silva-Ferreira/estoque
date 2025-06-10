@@ -42,7 +42,7 @@ if produto:
       #Fix the SQL query - it was updatin 'cliente' table instead of 'produtos'
       #and had incorrect parameter binding 
 
-    cursor.execute("UPDATE clientes SET quantidade = ? WHERE nome = ?", (nova_quantidade, novo_preco, nome)
+    cursor.execute("UPDATE clientes SET quantidade = ? WHERE nome = ?", (nova_quantidade, novo_preco, nome))
     conn.commit()
 
     print("Produto atualizado com sucesso!")
