@@ -39,8 +39,6 @@ if produto:
         except ValueError:
             print("Erro: Digite um valor válido para o preço. ")
 
-      #Fix the SQL query - it was updatin 'cliente' table instead of 'produtos'
-      #and had incorrect parameter binding 
 
     cursor.execute("UPDATE clientes SET quantidade = ? WHERE nome = ?", (nova_quantidade, novo_preco, nome))
     conn.commit()
