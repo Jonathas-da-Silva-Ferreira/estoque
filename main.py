@@ -3,32 +3,30 @@ from banco import conectar
 conn = conectar()
 cursor = conn.cursor()
 
-nome = input("Digite o nome do que deseja pesquisar: ").strip()
+nome = input("Digite o nome do produto que deseja atualizar: ").strip()
 
 cursor.execute("SELECT * FROM produtos WHERE nome = ?", (nome,))
 produto = cursor.fetchone()
 
 if produto:
-    # Display the old product information
     print("\n--- Produto Encontrado ---")
-    print(f"Nome: {produto[1]}") # Assuming nome is at index 1
-    print(f"Quantidade atual: {produto[2]}") #Assuming quantidade is at index 2
-    print(f"Preço atual: R$ {produto[3]:.2f}") # Assuming preço is at index 3
+    print(f"Nome: {produto[1]}")
+    print(f"Quantidade atual: {produto[2]}")
+    print(f"Preço atual: R$ {produto[3]:.2f}")
     print("-" * 25)
 
-     # Get new quantity with validation
+    # Validação de quantidade
     while True:
-       try:
-            nova_quantidade = int(input("Digite a nova quantidade:"))
+        try:
+            nova_quantidade = int(input("Digite a nova quantidade: "))
             if nova_quantidade < 0:
                 print("Quantidade não pode ser negativa. Tente novamente.")
                 continue
             break
-       except ValueError:
+        except ValueError:
             print("Erro: Digite um número válido para a quantidade.")
-        
-        
-     # Get new price with validation
+
+    # Validação de preço
     while True:
         try:
             novo_preco = float(input("Novo preço: R$ "))
@@ -37,14 +35,16 @@ if produto:
                 continue
             break
         except ValueError:
-            print("Erro: Digite um valor válido para o preço. ")
+            print("Erro: Digite um valor válido para o preço.")
 
-
-    cursor.execute("UPDATE clientes SET quantidade = ? WHERE nome = ?", (nova_quantidade, novo_preco, nome))
+    # Atualização no banco de dados
+    cursor.execute(
+        "UPDATE produtos SET quantidade = ?, preco = ? WHERE nome = ?",
+        (nova_quantidade, novo_preco, nome)
+    )
     conn.commit()
-
-    print("Produto atualizado com sucesso!")
+    print("✅ Produto atualizado com sucesso!")
 else:
-    print("Produto não encontrado.")
+    print("❌ Produto não encontrado.")
 
 conn.close()
